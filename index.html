@@ -4,10 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Job Application Tracker</title>
+    <title>Job Application Tracker — Dashboard</title>
 
     <!-- Google Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
 
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
@@ -20,425 +21,762 @@
         }
 
         :root {
-            --bg-dark: #0a0f1e;
-            --bg-card: rgba(255, 255, 255, 0.05);
-            --bg-card-hover: rgba(255, 255, 255, 0.09);
-            --border: rgba(255, 255, 255, 0.08);
-            --border-hover: rgba(99, 179, 237, 0.4);
+            --bg-deep: #050a18;
+            --bg-card: rgba(255, 255, 255, 0.04);
+            --bg-card-hover: rgba(255, 255, 255, 0.08);
+            --border: rgba(255, 255, 255, 0.06);
+            --border-hover: rgba(99, 179, 237, 0.5);
             --accent-blue: #60a5fa;
             --accent-cyan: #22d3ee;
             --accent-purple: #a78bfa;
+            --accent-pink: #f472b6;
             --accent-green: #34d399;
             --accent-red: #f87171;
             --accent-yellow: #fbbf24;
+            --accent-orange: #fb923c;
             --text-primary: #f1f5f9;
             --text-secondary: #94a3b8;
             --text-muted: #64748b;
-            --glow-blue: rgba(96, 165, 250, 0.15);
-            --glow-purple: rgba(167, 139, 250, 0.15);
         }
+
+        html { scroll-behavior: smooth; }
 
         body {
             font-family: 'Inter', sans-serif;
-            background-color: var(--bg-dark);
+            background-color: var(--bg-deep);
             color: var(--text-primary);
             min-height: 100vh;
             overflow-x: hidden;
+            position: relative;
         }
 
-        /* Animated Background */
-        body::before {
-            content: '';
+        /* ===== ANIMATED FLOATING ORBS ===== */
+        .orb {
             position: fixed;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background:
-                radial-gradient(ellipse at 20% 20%, rgba(96, 165, 250, 0.07) 0%, transparent 50%),
-                radial-gradient(ellipse at 80% 80%, rgba(167, 139, 250, 0.07) 0%, transparent 50%),
-                radial-gradient(ellipse at 50% 50%, rgba(34, 211, 238, 0.04) 0%, transparent 60%);
+            border-radius: 50%;
+            filter: blur(80px);
             pointer-events: none;
             z-index: 0;
+            animation: orbFloat 12s ease-in-out infinite;
+        }
+        .orb-1 {
+            width: 400px; height: 400px;
+            background: radial-gradient(circle, rgba(96, 165, 250, 0.12), transparent 70%);
+            top: -10%; left: -5%;
+            animation-delay: 0s;
+        }
+        .orb-2 {
+            width: 350px; height: 350px;
+            background: radial-gradient(circle, rgba(167, 139, 250, 0.12), transparent 70%);
+            bottom: -10%; right: -5%;
+            animation-delay: -4s;
+        }
+        .orb-3 {
+            width: 300px; height: 300px;
+            background: radial-gradient(circle, rgba(34, 211, 238, 0.08), transparent 70%);
+            top: 40%; left: 50%;
+            animation-delay: -8s;
         }
 
+        @keyframes orbFloat {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(30px, -40px) scale(1.05); }
+            50% { transform: translate(-20px, 20px) scale(0.95); }
+            75% { transform: translate(15px, 30px) scale(1.02); }
+        }
+
+        /* Grid overlay */
         body::after {
             content: '';
             position: fixed;
             inset: 0;
             background-image:
-                radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px);
-            background-size: 40px 40px;
+                linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+            background-size: 60px 60px;
             pointer-events: none;
             z-index: 0;
         }
 
+        /* ===== CANVAS FOR PARTICLES ===== */
+        #particles-canvas {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* ===== WRAPPER ===== */
         .wrapper {
             position: relative;
             z-index: 1;
-            max-width: 1100px;
+            max-width: 1140px;
             margin: 0 auto;
-            padding: 40px 20px 80px;
+            padding: 40px 24px 100px;
         }
 
-        /* ===== HEADER ===== */
+        /* ===== NAVBAR ===== */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 36px;
+            padding: 16px 24px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            backdrop-filter: blur(20px);
+            animation: slideDown 0.6s ease both;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .nav-logo {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: white;
+            box-shadow: 0 4px 20px rgba(96,165,250,0.3);
+        }
+
+        .nav-title {
+            font-size: 18px;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--text-primary), var(--accent-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 8px 14px;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .search-box:focus-within {
+            border-color: rgba(96,165,250,0.5);
+            box-shadow: 0 0 20px rgba(96,165,250,0.1);
+            background: rgba(255,255,255,0.07);
+        }
+
+        .search-box i { color: var(--text-muted); font-size: 13px; }
+
+        .search-box input {
+            background: none;
+            border: none;
+            outline: none;
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            width: 160px;
+        }
+
+        .search-box input::placeholder { color: var(--text-muted); }
+
+        .nav-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--accent-green), var(--accent-cyan));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 700;
+            color: #050a18;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .nav-avatar:hover { transform: scale(1.1); }
+
+        /* ===== HERO / HEADER CARD ===== */
         .header-card {
             background: var(--bg-card);
             border: 1px solid var(--border);
-            border-radius: 24px;
-            padding: 36px 40px;
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            border-radius: 28px;
+            padding: 40px 44px;
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
             box-shadow:
-                0 0 0 1px rgba(255,255,255,0.04),
-                0 20px 60px rgba(0,0,0,0.4),
-                inset 0 1px 0 rgba(255,255,255,0.08);
-            margin-bottom: 32px;
+                0 0 0 1px rgba(255,255,255,0.03),
+                0 25px 80px rgba(0,0,0,0.5),
+                inset 0 1px 0 rgba(255,255,255,0.06);
+            margin-bottom: 36px;
             position: relative;
             overflow: hidden;
+            animation: fadeInUp 0.7s ease both;
         }
 
+        /* Animated top border */
         .header-card::before {
             content: '';
             position: absolute;
             top: 0; left: 0; right: 0;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(96,165,250,0.5), rgba(167,139,250,0.5), transparent);
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent-blue), var(--accent-purple), var(--accent-pink), transparent);
+            background-size: 200% 100%;
+            animation: shimmerBorder 3s linear infinite;
+        }
+
+        @keyframes shimmerBorder {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        /* Floating glow on header */
+        .header-card::after {
+            content: '';
+            position: absolute;
+            top: -60px; right: -60px;
+            width: 200px; height: 200px;
+            background: radial-gradient(circle, rgba(167,139,250,0.08), transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
         }
 
         .header-top {
             display: flex;
             align-items: center;
-            gap: 16px;
-            margin-bottom: 32px;
+            gap: 18px;
+            margin-bottom: 12px;
         }
 
-        .header-icon {
-            width: 52px;
-            height: 52px;
-            background: linear-gradient(135deg, rgba(96,165,250,0.2), rgba(167,139,250,0.2));
-            border: 1px solid rgba(96,165,250,0.3);
-            border-radius: 14px;
+        .header-icon-wrap {
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            border-radius: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 22px;
-            color: var(--accent-blue);
-            box-shadow: 0 0 20px rgba(96,165,250,0.15);
+            font-size: 24px;
+            color: white;
+            box-shadow:
+                0 8px 30px rgba(96,165,250,0.3),
+                inset 0 -2px 4px rgba(0,0,0,0.15);
+            position: relative;
+            animation: iconPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes iconPulse {
+            0%, 100% { box-shadow: 0 8px 30px rgba(96,165,250,0.3); }
+            50% { box-shadow: 0 8px 45px rgba(96,165,250,0.5), 0 0 20px rgba(167,139,250,0.2); }
         }
 
         .header-title {
-            font-size: 32px;
-            font-weight: 800;
-            background: linear-gradient(135deg, #f1f5f9, var(--accent-blue), var(--accent-purple));
+            font-size: 34px;
+            font-weight: 900;
+            background: linear-gradient(135deg, #ffffff, var(--accent-blue), var(--accent-purple), var(--accent-cyan));
+            background-size: 300% 100%;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            letter-spacing: -0.5px;
+            animation: textShimmer 4s ease-in-out infinite;
+            letter-spacing: -0.8px;
+        }
+
+        @keyframes textShimmer {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
         }
 
         .header-subtitle {
-            font-size: 13px;
+            font-size: 14px;
             color: var(--text-muted);
-            margin-top: 2px;
+            margin-top: 4px;
             font-weight: 400;
         }
 
-        /* Stats Grid */
+        .header-desc {
+            color: var(--text-secondary);
+            font-size: 15px;
+            line-height: 1.6;
+            margin-bottom: 32px;
+            max-width: 600px;
+        }
+
+        /* ===== STATS GRID ===== */
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(4, 1fr);
             gap: 16px;
         }
 
         .stat-card {
             background: rgba(255,255,255,0.03);
             border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 20px 24px;
+            border-radius: 18px;
+            padding: 22px;
             text-align: center;
-            transition: all 0.3s ease;
+            transition: all 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
             position: relative;
             overflow: hidden;
+            cursor: default;
         }
 
-        .stat-card::after {
+        .stat-card::before {
             content: '';
             position: absolute;
-            bottom: 0; left: 0; right: 0;
-            height: 2px;
+            inset: -1px;
+            border-radius: 18px;
+            padding: 1px;
+            background: linear-gradient(135deg, transparent 40%, var(--glow-color, transparent));
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0;
+            transition: opacity 0.35s;
         }
 
-        .stat-card.blue::after { background: linear-gradient(90deg, transparent, var(--accent-blue), transparent); }
-        .stat-card.green::after { background: linear-gradient(90deg, transparent, var(--accent-green), transparent); }
-        .stat-card.red::after { background: linear-gradient(90deg, transparent, var(--accent-red), transparent); }
+        .stat-card:hover::before { opacity: 1; }
 
         .stat-card:hover {
             background: rgba(255,255,255,0.06);
-            transform: translateY(-2px);
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
         }
 
+        .stat-card.blue { --glow-color: var(--accent-blue); }
+        .stat-card.green { --glow-color: var(--accent-green); }
+        .stat-card.red { --glow-color: var(--accent-red); }
+        .stat-card.yellow { --glow-color: var(--accent-yellow); }
+
+        .stat-icon-mini {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+            margin: 0 auto 12px;
+        }
+
+        .stat-card.blue .stat-icon-mini { background: rgba(96,165,250,0.15); color: var(--accent-blue); }
+        .stat-card.green .stat-icon-mini { background: rgba(52,211,153,0.15); color: var(--accent-green); }
+        .stat-card.red .stat-icon-mini { background: rgba(248,113,113,0.15); color: var(--accent-red); }
+        .stat-card.yellow .stat-icon-mini { background: rgba(251,191,36,0.15); color: var(--accent-yellow); }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 800;
+            line-height: 1;
+            margin-bottom: 4px;
+        }
+
+        .stat-value.blue { color: var(--accent-blue); }
+        .stat-value.green { color: var(--accent-green); }
+        .stat-value.red { color: var(--accent-red); }
+        .stat-value.yellow { color: var(--accent-yellow); }
+
         .stat-label {
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 600;
             color: var(--text-muted);
             text-transform: uppercase;
-            letter-spacing: 0.08em;
-            margin-bottom: 8px;
+            letter-spacing: 0.1em;
         }
 
-        .stat-value {
-            font-size: 36px;
-            font-weight: 800;
-            line-height: 1;
+        /* Progress bar under stat */
+        .stat-bar {
+            margin-top: 12px;
+            height: 4px;
+            background: rgba(255,255,255,0.06);
+            border-radius: 4px;
+            overflow: hidden;
         }
 
-        .stat-value.blue { color: var(--accent-blue); text-shadow: 0 0 20px rgba(96,165,250,0.4); }
-        .stat-value.green { color: var(--accent-green); text-shadow: 0 0 20px rgba(52,211,153,0.4); }
-        .stat-value.red { color: var(--accent-red); text-shadow: 0 0 20px rgba(248,113,113,0.4); }
+        .stat-bar-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 1.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+            width: 0;
+        }
 
-        /* ===== MAIN SECTION ===== */
+        .stat-card.blue .stat-bar-fill { background: linear-gradient(90deg, var(--accent-blue), var(--accent-cyan)); }
+        .stat-card.green .stat-bar-fill { background: linear-gradient(90deg, var(--accent-green), #6ee7b7); }
+        .stat-card.red .stat-bar-fill { background: linear-gradient(90deg, var(--accent-red), var(--accent-orange)); }
+        .stat-card.yellow .stat-bar-fill { background: linear-gradient(90deg, var(--accent-yellow), var(--accent-orange)); }
+
+        /* ===== SECTION HEADER ===== */
         .section-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 20px;
+            animation: fadeInUp 0.7s 0.2s ease both;
         }
 
         .section-title {
             font-size: 22px;
             font-weight: 700;
             color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent-green);
+            box-shadow: 0 0 10px var(--accent-green);
+            animation: dotPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes dotPulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.8); }
         }
 
         .job-count-badge {
             font-size: 13px;
             font-weight: 600;
-            color: var(--accent-blue);
-            background: rgba(96,165,250,0.1);
-            border: 1px solid rgba(96,165,250,0.2);
-            padding: 4px 12px;
+            color: var(--accent-cyan);
+            background: rgba(34,211,238,0.1);
+            border: 1px solid rgba(34,211,238,0.2);
+            padding: 6px 16px;
             border-radius: 999px;
         }
 
-        /* Filter Buttons */
+        /* ===== FILTER BAR ===== */
         .filter-bar {
             display: flex;
             gap: 10px;
             flex-wrap: wrap;
             margin-bottom: 28px;
+            animation: fadeInUp 0.7s 0.3s ease both;
         }
 
         .filter-btn {
-            padding: 8px 22px;
-            border-radius: 999px;
+            padding: 9px 24px;
+            border-radius: 12px;
             border: 1px solid var(--border);
-            background: rgba(255,255,255,0.04);
+            background: rgba(255,255,255,0.03);
             color: var(--text-secondary);
             font-size: 13px;
             font-weight: 600;
             font-family: 'Inter', sans-serif;
             cursor: pointer;
-            transition: all 0.25s ease;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            position: relative;
+            overflow: hidden;
         }
 
+        .filter-btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(96,165,250,0.1), rgba(167,139,250,0.1));
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .filter-btn:hover::before { opacity: 1; }
+
         .filter-btn:hover {
-            background: rgba(96,165,250,0.1);
-            border-color: rgba(96,165,250,0.3);
+            border-color: rgba(96,165,250,0.4);
             color: var(--accent-blue);
+            transform: translateY(-2px);
         }
 
         .filter-btn.active {
-            background: linear-gradient(135deg, rgba(96,165,250,0.25), rgba(167,139,250,0.15));
+            background: linear-gradient(135deg, rgba(96,165,250,0.2), rgba(167,139,250,0.15));
             border-color: rgba(96,165,250,0.5);
             color: var(--accent-blue);
-            box-shadow: 0 0 16px rgba(96,165,250,0.15);
+            box-shadow: 0 4px 20px rgba(96,165,250,0.15), inset 0 1px 0 rgba(255,255,255,0.1);
         }
 
-        /* Job Cards Grid */
+        .filter-btn span { position: relative; z-index: 1; }
+
+        /* ===== JOB CARDS ===== */
         .jobs-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
             gap: 20px;
+            animation: fadeInUp 0.7s 0.4s ease both;
         }
 
         .job-card {
             background: var(--bg-card);
             border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 24px;
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            transition: all 0.3s ease;
+            border-radius: 22px;
+            padding: 26px;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
             position: relative;
             overflow: hidden;
             cursor: default;
         }
 
+        /* Glowing border on hover */
         .job-card::before {
             content: '';
             position: absolute;
-            top: 0; left: -100%; right: -100%; bottom: 0;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.02), transparent);
-            transition: left 0.5s ease;
+            inset: -1px;
+            border-radius: 22px;
+            padding: 1px;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple), var(--accent-cyan));
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0;
+            transition: opacity 0.4s;
         }
 
-        .job-card:hover::before { left: 100%; }
+        /* Shimmer sweep */
+        .job-card::after {
+            content: '';
+            position: absolute;
+            top: 0; left: -150%;
+            width: 100%; height: 100%;
+            background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.03) 45%, rgba(255,255,255,0.06) 50%, rgba(255,255,255,0.03) 55%, transparent 60%);
+            transition: left 0.7s ease;
+        }
+
+        .job-card:hover::before { opacity: 1; }
+        .job-card:hover::after { left: 150%; }
 
         .job-card:hover {
             background: var(--bg-card-hover);
-            border-color: var(--border-hover);
-            transform: translateY(-4px);
-            box-shadow: 0 20px 50px rgba(0,0,0,0.4), 0 0 30px rgba(96,165,250,0.08);
+            transform: translateY(-6px) scale(1.01);
+            box-shadow:
+                0 25px 60px rgba(0,0,0,0.4),
+                0 0 40px rgba(96,165,250,0.08),
+                0 0 80px rgba(167,139,250,0.05);
         }
 
         .job-card-top {
             display: flex;
             align-items: flex-start;
             gap: 14px;
-            margin-bottom: 16px;
+            margin-bottom: 14px;
+            position: relative;
+            z-index: 1;
         }
 
         .company-logo {
-            width: 44px;
-            height: 44px;
-            border-radius: 12px;
-            background: linear-gradient(135deg, rgba(96,165,250,0.15), rgba(167,139,250,0.15));
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
             border: 1px solid rgba(255,255,255,0.08);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 18px;
+            font-size: 22px;
             flex-shrink: 0;
+            transition: transform 0.3s;
         }
 
-        .job-info { flex: 1; }
+        .company-logo.gradient-1 { background: linear-gradient(135deg, rgba(96,165,250,0.2), rgba(34,211,238,0.15)); }
+        .company-logo.gradient-2 { background: linear-gradient(135deg, rgba(248,113,113,0.2), rgba(251,191,36,0.15)); }
+        .company-logo.gradient-3 { background: linear-gradient(135deg, rgba(167,139,250,0.2), rgba(244,114,182,0.15)); }
+        .company-logo.gradient-4 { background: linear-gradient(135deg, rgba(52,211,153,0.2), rgba(34,211,238,0.15)); }
+        .company-logo.gradient-5 { background: linear-gradient(135deg, rgba(251,191,36,0.2), rgba(251,146,60,0.15)); }
+        .company-logo.gradient-6 { background: linear-gradient(135deg, rgba(34,211,238,0.2), rgba(96,165,250,0.15)); }
+
+        .job-card:hover .company-logo { transform: rotate(-5deg) scale(1.08); }
+
+        .job-info { flex: 1; position: relative; z-index: 1; }
 
         .job-title {
             font-size: 16px;
             font-weight: 700;
             color: var(--text-primary);
-            margin-bottom: 4px;
+            margin-bottom: 3px;
             line-height: 1.3;
+            transition: color 0.3s;
         }
+
+        .job-card:hover .job-title { color: var(--accent-blue); }
 
         .company-name {
             font-size: 13px;
             color: var(--text-muted);
             font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
+
+        .company-name i { font-size: 10px; color: var(--accent-purple); }
 
         .job-meta {
             display: flex;
             flex-wrap: wrap;
             gap: 8px;
-            margin-bottom: 20px;
+            margin-bottom: 18px;
+            position: relative;
+            z-index: 1;
         }
 
         .meta-tag {
-            display: flex;
+            display: inline-flex;
             align-items: center;
             gap: 5px;
-            font-size: 12px;
+            font-size: 11px;
             color: var(--text-muted);
             background: rgba(255,255,255,0.04);
             border: 1px solid var(--border);
-            border-radius: 6px;
-            padding: 4px 10px;
+            border-radius: 8px;
+            padding: 5px 10px;
+            transition: all 0.2s;
         }
 
         .meta-tag i { font-size: 10px; }
+
+        .meta-tag:hover {
+            background: rgba(96,165,250,0.08);
+            border-color: rgba(96,165,250,0.2);
+        }
 
         .job-card-bottom {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            position: relative;
+            z-index: 1;
         }
 
-        /* Status Badges */
+        /* ===== BADGES ===== */
         .badge {
             display: inline-flex;
             align-items: center;
-            gap: 5px;
-            padding: 5px 12px;
+            gap: 6px;
+            padding: 5px 14px;
             border-radius: 999px;
             font-size: 12px;
             font-weight: 600;
+            position: relative;
+        }
+
+        .badge::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            flex-shrink: 0;
         }
 
         .badge-interview {
-            background: rgba(52,211,153,0.12);
+            background: rgba(52,211,153,0.1);
             color: var(--accent-green);
-            border: 1px solid rgba(52,211,153,0.25);
+            border: 1px solid rgba(52,211,153,0.2);
         }
+        .badge-interview::before { background: var(--accent-green); box-shadow: 0 0 6px var(--accent-green); }
 
         .badge-rejected {
-            background: rgba(248,113,113,0.12);
+            background: rgba(248,113,113,0.1);
             color: var(--accent-red);
-            border: 1px solid rgba(248,113,113,0.25);
+            border: 1px solid rgba(248,113,113,0.2);
         }
+        .badge-rejected::before { background: var(--accent-red); box-shadow: 0 0 6px var(--accent-red); }
 
         .badge-pending {
-            background: rgba(251,191,36,0.12);
+            background: rgba(251,191,36,0.1);
             color: var(--accent-yellow);
-            border: 1px solid rgba(251,191,36,0.25);
+            border: 1px solid rgba(251,191,36,0.2);
         }
+        .badge-pending::before { background: var(--accent-yellow); box-shadow: 0 0 6px var(--accent-yellow); }
 
         .badge-applied {
-            background: rgba(96,165,250,0.12);
+            background: rgba(96,165,250,0.1);
             color: var(--accent-blue);
-            border: 1px solid rgba(96,165,250,0.25);
+            border: 1px solid rgba(96,165,250,0.2);
         }
+        .badge-applied::before { background: var(--accent-blue); box-shadow: 0 0 6px var(--accent-blue); }
 
-        /* Details Button */
+        /* ===== DETAILS BUTTON ===== */
         .btn-details {
-            padding: 7px 18px;
+            padding: 8px 20px;
             border-radius: 10px;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
             color: var(--text-secondary);
             font-size: 12px;
             font-weight: 600;
             font-family: 'Inter', sans-serif;
             cursor: pointer;
-            transition: all 0.25s ease;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-details i {
+            font-size: 10px;
+            transition: transform 0.3s;
         }
 
         .btn-details:hover {
-            background: rgba(96,165,250,0.15);
-            border-color: rgba(96,165,250,0.4);
+            background: linear-gradient(135deg, rgba(96,165,250,0.15), rgba(167,139,250,0.1));
+            border-color: rgba(96,165,250,0.5);
             color: var(--accent-blue);
+            transform: translateX(2px);
+            box-shadow: 0 4px 16px rgba(96,165,250,0.15);
         }
 
-        /* Empty State */
+        .btn-details:hover i { transform: translateX(3px); }
+
+        /* ===== EMPTY STATE ===== */
         #empty-state {
             display: none;
             text-align: center;
             background: var(--bg-card);
             border: 1px solid var(--border);
-            border-radius: 24px;
+            border-radius: 28px;
             padding: 60px 40px;
-            backdrop-filter: blur(16px);
-            max-width: 420px;
+            backdrop-filter: blur(20px);
+            max-width: 440px;
             margin: 40px auto 0;
         }
 
         .empty-icon {
-            width: 72px;
-            height: 72px;
-            background: rgba(255,255,255,0.04);
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, rgba(96,165,250,0.1), rgba(167,139,250,0.1));
             border: 1px solid var(--border);
-            border-radius: 20px;
+            border-radius: 22px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 30px;
+            font-size: 32px;
             color: var(--text-muted);
-            margin: 0 auto 20px;
+            margin: 0 auto 24px;
         }
 
         #empty-state h3 {
-            font-size: 18px;
+            font-size: 19px;
             font-weight: 700;
             color: var(--text-primary);
             margin-bottom: 8px;
@@ -450,55 +788,132 @@
             line-height: 1.6;
         }
 
-        /* Responsive */
-        @media (max-width: 640px) {
-            .stats-grid { grid-template-columns: 1fr; }
-            .header-title { font-size: 24px; }
-            .header-card { padding: 24px 20px; }
-            .wrapper { padding: 24px 16px 60px; }
+        /* ===== FOOTER ===== */
+        .footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-muted);
+            font-size: 12px;
+            animation: fadeInUp 0.7s 0.6s ease both;
         }
 
-        /* Scroll animation */
+        .footer a {
+            color: var(--accent-blue);
+            text-decoration: none;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .header-title { font-size: 24px; }
+            .header-card { padding: 28px 24px; }
+            .wrapper { padding: 24px 16px 60px; }
+            .navbar { flex-direction: column; gap: 12px; }
+            .search-box input { width: 120px; }
+        }
+
+        @media (max-width: 480px) {
+            .stats-grid { grid-template-columns: 1fr; }
+            .jobs-grid { grid-template-columns: 1fr; }
+        }
+
+        /* ===== ANIMATIONS ===== */
         @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px); }
+            from { opacity: 0; transform: translateY(24px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        .header-card { animation: fadeInUp 0.5s ease forwards; }
-        .section-header { animation: fadeInUp 0.5s 0.1s ease both; }
-        .filter-bar { animation: fadeInUp 0.5s 0.2s ease both; }
-        .jobs-grid { animation: fadeInUp 0.5s 0.3s ease both; }
+        .job-card {
+            animation: fadeInUp 0.5s ease both;
+        }
+
+        .job-card:nth-child(1) { animation-delay: 0.4s; }
+        .job-card:nth-child(2) { animation-delay: 0.5s; }
+        .job-card:nth-child(3) { animation-delay: 0.6s; }
+        .job-card:nth-child(4) { animation-delay: 0.7s; }
+        .job-card:nth-child(5) { animation-delay: 0.8s; }
+        .job-card:nth-child(6) { animation-delay: 0.9s; }
+
+        /* ===== CUSTOM SCROLLBAR ===== */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(96,165,250,0.3);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(96,165,250,0.5); }
     </style>
 </head>
 
 <body>
+    <!-- Floating orbs -->
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+
+    <!-- Particle canvas -->
+    <canvas id="particles-canvas"></canvas>
+
     <div class="wrapper">
+
+        <!-- NAVBAR -->
+        <nav class="navbar">
+            <div class="nav-brand">
+                <div class="nav-logo">
+                    <i class="fa-solid fa-rocket"></i>
+                </div>
+                <span class="nav-title">JobTrackr</span>
+            </div>
+            <div class="nav-right">
+                <div class="search-box">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" id="searchInput" placeholder="Search jobs..." />
+                </div>
+                <div class="nav-avatar">ZR</div>
+            </div>
+        </nav>
 
         <!-- HEADER -->
         <header>
             <div class="header-card">
                 <div class="header-top">
-                    <div class="header-icon">
+                    <div class="header-icon-wrap">
                         <i class="fa-solid fa-briefcase"></i>
                     </div>
                     <div>
-                        <h2 class="header-title">Job Application Tracker</h2>
-                        <p class="header-subtitle">Track, manage & monitor your job applications</p>
+                        <h1 class="header-title">Job Application Tracker</h1>
+                        <p class="header-subtitle">Track, manage & monitor your career journey ✨</p>
                     </div>
                 </div>
 
+                <p class="header-desc">
+                    Stay on top of every application, interview, and follow-up — all in one elegant dashboard.
+                </p>
+
                 <div class="stats-grid">
                     <div class="stat-card blue">
-                        <p class="stat-label"><i class="fa-solid fa-layer-group" style="margin-right:5px;"></i>Total Jobs</p>
+                        <div class="stat-icon-mini"><i class="fa-solid fa-layer-group"></i></div>
                         <p id="allCount" class="stat-value blue">8</p>
+                        <p class="stat-label">Total</p>
+                        <div class="stat-bar"><div class="stat-bar-fill" data-width="100"></div></div>
                     </div>
                     <div class="stat-card green">
-                        <p class="stat-label"><i class="fa-solid fa-calendar-check" style="margin-right:5px;"></i>Interview</p>
+                        <div class="stat-icon-mini"><i class="fa-solid fa-calendar-check"></i></div>
                         <p id="interviewCount" class="stat-value green">2</p>
+                        <p class="stat-label">Interview</p>
+                        <div class="stat-bar"><div class="stat-bar-fill" data-width="25"></div></div>
+                    </div>
+                    <div class="stat-card yellow">
+                        <div class="stat-icon-mini"><i class="fa-solid fa-clock"></i></div>
+                        <p class="stat-value yellow">3</p>
+                        <p class="stat-label">Pending</p>
+                        <div class="stat-bar"><div class="stat-bar-fill" data-width="37"></div></div>
                     </div>
                     <div class="stat-card red">
-                        <p class="stat-label"><i class="fa-solid fa-circle-xmark" style="margin-right:5px;"></i>Rejected</p>
+                        <div class="stat-icon-mini"><i class="fa-solid fa-circle-xmark"></i></div>
                         <p id="rejectCount" class="stat-value red">1</p>
+                        <p class="stat-label">Rejected</p>
+                        <div class="stat-bar"><div class="stat-bar-fill" data-width="12"></div></div>
                     </div>
                 </div>
             </div>
@@ -506,43 +921,39 @@
 
         <!-- MAIN -->
         <main>
-            <!-- Section Header -->
             <div class="section-header">
-                <h2 class="section-title">Available Jobs</h2>
-                <span class="job-count-badge"><span id="jobCount">8</span> Jobs</span>
+                <h2 class="section-title"><span class="dot"></span> Available Jobs</h2>
+                <span class="job-count-badge"><span id="jobCount">6</span> Jobs</span>
             </div>
 
-            <!-- Filter Buttons -->
+            <!-- Filter -->
             <div class="filter-bar">
-                <button class="filter-btn active">
-                    <i class="fa-solid fa-table-cells-large" style="margin-right:6px;"></i>All
-                </button>
-                <button class="filter-btn">
-                    <i class="fa-solid fa-calendar-check" style="margin-right:6px; color:#34d399;"></i>Interview
-                </button>
-                <button class="filter-btn">
-                    <i class="fa-solid fa-circle-xmark" style="margin-right:6px; color:#f87171;"></i>Rejected
-                </button>
+                <button class="filter-btn active"><span><i class="fa-solid fa-border-all" style="margin-right:6px;"></i>All</span></button>
+                <button class="filter-btn"><span><i class="fa-solid fa-calendar-check" style="margin-right:6px; color:#34d399;"></i>Interview</span></button>
+                <button class="filter-btn"><span><i class="fa-solid fa-circle-xmark" style="margin-right:6px; color:#f87171;"></i>Rejected</span></button>
+                <button class="filter-btn"><span><i class="fa-solid fa-clock" style="margin-right:6px; color:#fbbf24;"></i>Pending</span></button>
+                <button class="filter-btn"><span><i class="fa-solid fa-paper-plane" style="margin-right:6px; color:#60a5fa;"></i>Applied</span></button>
             </div>
 
-            <!-- Job Cards -->
+            <!-- Job Cards Grid -->
             <div class="jobs-grid">
 
                 <!-- Card 1 -->
                 <div class="job-card">
                     <div class="job-card-top">
-                        <div class="company-logo">💼</div>
+                        <div class="company-logo gradient-1">💼</div>
                         <div class="job-info">
                             <h3 class="job-title">Frontend Developer</h3>
-                            <p class="company-name">Tech Solutions Ltd</p>
+                            <p class="company-name"><i class="fa-solid fa-building"></i> Tech Solutions Ltd</p>
                         </div>
                     </div>
                     <div class="job-meta">
                         <span class="meta-tag"><i class="fa-solid fa-location-dot"></i> Remote</span>
                         <span class="meta-tag"><i class="fa-solid fa-dollar-sign"></i> $3k–$5k</span>
+                        <span class="meta-tag"><i class="fa-regular fa-clock"></i> Full-time</span>
                     </div>
                     <div class="job-card-bottom">
-                        <span class="badge badge-interview"><i class="fa-solid fa-circle-check"></i> Interview</span>
+                        <span class="badge badge-interview">Interview</span>
                         <button class="btn-details">Details <i class="fa-solid fa-arrow-right"></i></button>
                     </div>
                 </div>
@@ -550,18 +961,19 @@
                 <!-- Card 2 -->
                 <div class="job-card">
                     <div class="job-card-top">
-                        <div class="company-logo">🏭</div>
+                        <div class="company-logo gradient-2">🏭</div>
                         <div class="job-info">
                             <h3 class="job-title">Backend Developer</h3>
-                            <p class="company-name">Code Factory</p>
+                            <p class="company-name"><i class="fa-solid fa-building"></i> Code Factory</p>
                         </div>
                     </div>
                     <div class="job-meta">
                         <span class="meta-tag"><i class="fa-solid fa-location-dot"></i> On-site</span>
                         <span class="meta-tag"><i class="fa-solid fa-dollar-sign"></i> $4k–$6k</span>
+                        <span class="meta-tag"><i class="fa-regular fa-clock"></i> Full-time</span>
                     </div>
                     <div class="job-card-bottom">
-                        <span class="badge badge-rejected"><i class="fa-solid fa-circle-xmark"></i> Rejected</span>
+                        <span class="badge badge-rejected">Rejected</span>
                         <button class="btn-details">Details <i class="fa-solid fa-arrow-right"></i></button>
                     </div>
                 </div>
@@ -569,18 +981,19 @@
                 <!-- Card 3 -->
                 <div class="job-card">
                     <div class="job-card-top">
-                        <div class="company-logo">🎨</div>
+                        <div class="company-logo gradient-3">🎨</div>
                         <div class="job-info">
                             <h3 class="job-title">UI/UX Designer</h3>
-                            <p class="company-name">Creative Studio</p>
+                            <p class="company-name"><i class="fa-solid fa-building"></i> Creative Studio</p>
                         </div>
                     </div>
                     <div class="job-meta">
                         <span class="meta-tag"><i class="fa-solid fa-location-dot"></i> Hybrid</span>
                         <span class="meta-tag"><i class="fa-solid fa-dollar-sign"></i> $2k–$4k</span>
+                        <span class="meta-tag"><i class="fa-regular fa-clock"></i> Contract</span>
                     </div>
                     <div class="job-card-bottom">
-                        <span class="badge badge-pending"><i class="fa-solid fa-clock"></i> Pending</span>
+                        <span class="badge badge-pending">Pending</span>
                         <button class="btn-details">Details <i class="fa-solid fa-arrow-right"></i></button>
                     </div>
                 </div>
@@ -588,18 +1001,19 @@
                 <!-- Card 4 -->
                 <div class="job-card">
                     <div class="job-card-top">
-                        <div class="company-logo">🚀</div>
+                        <div class="company-logo gradient-4">🚀</div>
                         <div class="job-info">
                             <h3 class="job-title">Full Stack Engineer</h3>
-                            <p class="company-name">LaunchPad Inc</p>
+                            <p class="company-name"><i class="fa-solid fa-building"></i> LaunchPad Inc</p>
                         </div>
                     </div>
                     <div class="job-meta">
                         <span class="meta-tag"><i class="fa-solid fa-location-dot"></i> Remote</span>
                         <span class="meta-tag"><i class="fa-solid fa-dollar-sign"></i> $5k–$8k</span>
+                        <span class="meta-tag"><i class="fa-regular fa-clock"></i> Full-time</span>
                     </div>
                     <div class="job-card-bottom">
-                        <span class="badge badge-applied"><i class="fa-solid fa-paper-plane"></i> Applied</span>
+                        <span class="badge badge-applied">Applied</span>
                         <button class="btn-details">Details <i class="fa-solid fa-arrow-right"></i></button>
                     </div>
                 </div>
@@ -607,18 +1021,19 @@
                 <!-- Card 5 -->
                 <div class="job-card">
                     <div class="job-card-top">
-                        <div class="company-logo">🤖</div>
+                        <div class="company-logo gradient-5">🤖</div>
                         <div class="job-info">
                             <h3 class="job-title">AI/ML Developer</h3>
-                            <p class="company-name">DeepMind Labs</p>
+                            <p class="company-name"><i class="fa-solid fa-building"></i> DeepMind Labs</p>
                         </div>
                     </div>
                     <div class="job-meta">
                         <span class="meta-tag"><i class="fa-solid fa-location-dot"></i> Remote</span>
                         <span class="meta-tag"><i class="fa-solid fa-dollar-sign"></i> $7k–$10k</span>
+                        <span class="meta-tag"><i class="fa-regular fa-clock"></i> Full-time</span>
                     </div>
                     <div class="job-card-bottom">
-                        <span class="badge badge-interview"><i class="fa-solid fa-circle-check"></i> Interview</span>
+                        <span class="badge badge-interview">Interview</span>
                         <button class="btn-details">Details <i class="fa-solid fa-arrow-right"></i></button>
                     </div>
                 </div>
@@ -626,18 +1041,19 @@
                 <!-- Card 6 -->
                 <div class="job-card">
                     <div class="job-card-top">
-                        <div class="company-logo">☁️</div>
+                        <div class="company-logo gradient-6">☁️</div>
                         <div class="job-info">
                             <h3 class="job-title">DevOps Engineer</h3>
-                            <p class="company-name">CloudBase Corp</p>
+                            <p class="company-name"><i class="fa-solid fa-building"></i> CloudBase Corp</p>
                         </div>
                     </div>
                     <div class="job-meta">
                         <span class="meta-tag"><i class="fa-solid fa-location-dot"></i> On-site</span>
                         <span class="meta-tag"><i class="fa-solid fa-dollar-sign"></i> $4k–$7k</span>
+                        <span class="meta-tag"><i class="fa-regular fa-clock"></i> Full-time</span>
                     </div>
                     <div class="job-card-bottom">
-                        <span class="badge badge-pending"><i class="fa-solid fa-clock"></i> Pending</span>
+                        <span class="badge badge-pending">Pending</span>
                         <button class="btn-details">Details <i class="fa-solid fa-arrow-right"></i></button>
                     </div>
                 </div>
@@ -650,14 +1066,75 @@
                     <i class="fa-solid fa-folder-open"></i>
                 </div>
                 <h3>No jobs found</h3>
-                <p>No applications match the selected filter. Try a different category.</p>
+                <p>No applications match the selected filter or search. Try a different keyword.</p>
             </div>
 
         </main>
+
+        <footer class="footer">
+            Made with ❤️ by <a href="#">JobTrackr</a> — 2026
+        </footer>
     </div>
 
     <script>
-        // Filter functionality
+        // ===== PARTICLE BACKGROUND =====
+        const canvas = document.getElementById('particles-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        class Particle {
+            constructor() {
+                this.reset();
+            }
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 1.5 + 0.5;
+                this.speedX = (Math.random() - 0.5) * 0.3;
+                this.speedY = (Math.random() - 0.5) * 0.3;
+                this.opacity = Math.random() * 0.4 + 0.1;
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                if (this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) {
+                    this.reset();
+                }
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(96, 165, 250, ${this.opacity})`;
+                ctx.fill();
+            }
+        }
+
+        for (let i = 0; i < 60; i++) particles.push(new Particle());
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => { p.update(); p.draw(); });
+            requestAnimationFrame(animateParticles);
+        }
+        animateParticles();
+
+        // ===== STAT BAR ANIMATION =====
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.querySelectorAll('.stat-bar-fill').forEach(bar => {
+                    bar.style.width = bar.dataset.width + '%';
+                });
+            }, 500);
+        });
+
+        // ===== FILTER FUNCTIONALITY =====
         const filterBtns = document.querySelectorAll('.filter-btn');
         const jobCards = document.querySelectorAll('.job-card');
         const emptyState = document.getElementById('empty-state');
@@ -668,19 +1145,45 @@
                 filterBtns.forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
 
-                const text = btn.textContent.trim().toLowerCase();
+                const filterText = btn.textContent.trim().toLowerCase();
                 let visible = 0;
 
-                jobCards.forEach(card => {
+                jobCards.forEach((card, i) => {
                     const badge = card.querySelector('.badge').textContent.trim().toLowerCase();
-                    const show = text === 'all' || badge.includes(text);
+                    const show = filterText.includes('all') || badge.includes(filterText.replace(/[^a-z]/g, ''));
                     card.style.display = show ? 'block' : 'none';
-                    if (show) visible++;
+                    if (show) {
+                        visible++;
+                        card.style.animation = `fadeInUp 0.4s ${i * 0.08}s ease both`;
+                    }
                 });
 
                 jobCountEl.textContent = visible;
                 emptyState.style.display = visible === 0 ? 'block' : 'none';
             });
+        });
+
+        // ===== SEARCH FUNCTIONALITY =====
+        const searchInput = document.getElementById('searchInput');
+        searchInput.addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase();
+            let visible = 0;
+
+            // Reset active filter
+            filterBtns.forEach(b => b.classList.remove('active'));
+            filterBtns[0].classList.add('active');
+
+            jobCards.forEach(card => {
+                const title = card.querySelector('.job-title').textContent.toLowerCase();
+                const company = card.querySelector('.company-name').textContent.toLowerCase();
+                const badge = card.querySelector('.badge').textContent.toLowerCase();
+                const show = title.includes(query) || company.includes(query) || badge.includes(query);
+                card.style.display = show ? 'block' : 'none';
+                if (show) visible++;
+            });
+
+            jobCountEl.textContent = visible;
+            emptyState.style.display = visible === 0 ? 'block' : 'none';
         });
     </script>
 
